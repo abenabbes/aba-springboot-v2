@@ -22,8 +22,8 @@ public class BookControllerV1 {
 	
 	@GetMapping
     public ResponseEntity<List<BookResponseDto>> getBooksByAuthor(
-            @RequestParam String authorPrenom,
-            @RequestParam String authorNom
+    		    @RequestParam String authorPrenom,
+    		    @RequestParam String authorNom
     ) {
 				BookRequestDto request = BookRequestDto.builder()
 				.authorPrenom(authorPrenom)

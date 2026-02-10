@@ -28,7 +28,9 @@ public class BookServiceV1Impl implements BookServiceV1 {
 		AuthorEntity author = authorRepository
                 .findByPrenomAndNom(request.getAuthorPrenom(), request.getAuthorNom())
                 .orElseThrow(() -> new NotFoundException(
-                        "Auteur non trouvé : " + request.getAuthorPrenom() + " " + request.getAuthorNom()
+                        "Attention! Aucun auteur avec le prénom = : " 
+                        		+ request.getAuthorPrenom() + " et le Nom = " 
+                        		+ request.getAuthorNom() + " n'existe pas."
                 ));
 
         List<BookEntity> books = bookRepository.findByAuthorId(author.getId());

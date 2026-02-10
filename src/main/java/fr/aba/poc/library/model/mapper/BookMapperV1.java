@@ -13,6 +13,8 @@ public interface BookMapperV1 {
 
 	@Mapping(target = "id", source = "id")
     @Mapping(target = "titre", source = "titre")
+	@Mapping(target = "isbn", source = "isbn")
+	@Mapping(target = "publicationDate", source = "datePublication")
     BookResponseDto toResponseDto(BookEntity entity);
 
     List<BookResponseDto> toResponseDtos(List<BookEntity> entities);
