@@ -2,13 +2,11 @@ package fr.aba.poc.library.service;
 
 import java.util.List;
 
+import fr.aba.poc.library.model.dto.*;
 import org.springframework.stereotype.Service;
 
 import fr.aba.poc.library.exception.NotFoundException;
 import fr.aba.poc.library.model.Gender;
-import fr.aba.poc.library.model.dto.AjoutBookDto;
-import fr.aba.poc.library.model.dto.BookRequestDto;
-import fr.aba.poc.library.model.dto.BookResponseDto;
 import fr.aba.poc.library.model.entity.AuthorEntity;
 import fr.aba.poc.library.model.entity.BookEntity;
 import fr.aba.poc.library.model.mapper.BookMapperV1;
@@ -74,5 +72,39 @@ public class BookServiceV1Impl implements BookServiceV1 {
 		bookRepository.save(book);
 		
 	}
+
+	@Override
+	public BookAuthorCompletDto ddBooksWithAuthorV2(BookCompletDto dto) {
+		//Recherche si un Author existe
+		AuthorEntity author = authorRepository
+				.findByPrenomAndNom(dto.getAuthor().getPrenom(), dto.getAuthor().getNom())
+				.orElseGet(() -> { // Si l'auteur n'existe pas alors création d'un nouveau
+					AuthorEntity a = new AuthorEntity();
+					a.setPrenom(dto.getAuthor().getPrenom());
+					a.setNom(dto.getAuthor().getNom());
+					return authorRepository.save(a);
+				});
+
+		// Creation d'un Book
+		BookEntity book = new BookEntity();
+		book.setTitre(dto.getTitre());
+		book.setIsbn(dto.getIsbn());
+		book.setDatePublication(dto.getDatePublication());
+		book.setAuthor(author);
+	   //enregistrement de Book
+		BookEntity saved = bookRepository.save(book);
+
+		// Transformer le retour
+		BookAuthorCompletDto response = new BookAuthorCompletDto();
+		response.setId(saved.getId());
+		response.setTitre(saved.getTitre());
+		response.setIsbn(saved.getIsbn());
+		response.setPublicationDate(saved.getDatePublication());
+		response.setAuthorPrenom(author.getPrenom());
+		response.setAuthorNom(author.getPrenom());
+
+		return response;
+	}
+
 
 }
