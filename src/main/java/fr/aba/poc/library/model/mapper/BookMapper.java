@@ -3,18 +3,26 @@ package fr.aba.poc.library.model.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import fr.aba.poc.library.model.dto.BookDto;
 import fr.aba.poc.library.model.entity.BookEntity;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+		unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE // pour ignorer les propriétés non mappées et éviter les warnings
+		)
 public interface BookMapper {
 
-	BookDto toDTO(BookEntity entite);
+	@Mapping(source = "author.id", target = "authorId")
+    @Mapping(source = "author.prenom", target = "authorPrenom")
+    @Mapping(source = "author.nom", target = "authorNom")
+	@Mapping(source = "author.sexe", target = "authorSexe")
+	BookDto toBookDto(BookEntity entite);
 	
-	BookEntity toEntity(BookDto dto);
+	@Mapping(target = "author", ignore = true) // géré dans le service
+	BookEntity toBookEntity(BookDto dto);
 	
-	List<BookDto> toDTOList(List<BookEntity> entities);
+	List<BookDto> toBookDtoList(List<BookEntity> entities);
 	
-	List<BookEntity> toEntityList(List<BookDto> dtos);
+	List<BookEntity> toBookEntityList(List<BookDto> dtos);
 }

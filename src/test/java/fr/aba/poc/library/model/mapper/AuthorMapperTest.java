@@ -24,7 +24,7 @@ public class AuthorMapperTest {
 				.sexe(Gender.M)
 				.build();
 		
-		AuthorDto dto = authorMapper.toDTO(entity);
+		AuthorDto dto = authorMapper.toAuthorDto(entity);
 		
 		assert dto.getId().equals(entity.getId());
 		assertThat(dto).isNotNull();
@@ -46,7 +46,7 @@ public class AuthorMapperTest {
 				.sexe(Gender.M)
 				.build();
 		
-		List<AuthorDto> dtos = authorMapper.toDTOList(List.of(entity1,entity2));
+		List<AuthorDto> dtos = authorMapper.toAuthorDtoList(List.of(entity1,entity2));
 		
 		assertThat(dtos).isNotNull();
 		assertThat(dtos.size()).isEqualTo(2);

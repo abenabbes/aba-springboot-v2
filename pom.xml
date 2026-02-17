@@ -41,6 +41,8 @@
 		Validation
 		Spring Boot Starter Test		
 		springdoc-openapi
+		  **** integration de  springdoc-openapi-starter-webmvc-ui pour la documentation Swagger UI ****
+		  **** integration de springdoc-openapi-starter-webmvc-api pour la génération de la documentation OpenAPI sans l'interface Swagger UI ***
 					
 	-->
 	<dependencies>
@@ -61,10 +63,37 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Swagger UI et OpenAPI -->
 		<dependency>
 		    <groupId>org.springdoc</groupId>
 		    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 		    <version>${springdoc-openapi.version}</version>
+		</dependency>
+		<!-- Version Jakarta (Java 17+) -->
+		<dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>		    
+		</dependency>
+		
+		<!-- ✅ AJOUTER CES DEUX DÉPENDANCES -->
+		<!-- Pour l'annotation @Generated (rétrocompatibilité) -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+		    <version>1.3.2</version>
+		</dependency>
+
+		<!-- Pour org.openapitools.jackson.nullable (code généré) -->
+		<dependency>
+		    <groupId>org.openapitools</groupId>
+		    <artifactId>jackson-databind-nullable</artifactId>
+		    <version>0.2.6</version>
+		</dependency>
+		<!-- Pour les annotations @Nullable et @Nonnull -->
+		<dependency>
+		    <groupId>com.google.code.findbugs</groupId>
+		    <artifactId>jsr305</artifactId>
+		    <version>3.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -95,6 +124,21 @@
 	</dependencies>
 
 	<build>
+		<!-- Resources-->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+		
+		<!-- Plugins-->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -127,6 +171,38 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<!-- Plugin OpenAPI Generator pour créer du code client -->
+		    <plugin>
+		        <groupId>org.openapitools</groupId>
+		        <artifactId>openapi-generator-maven-plugin</artifactId>
+		        <version>7.1.0</version>
+		        <executions>
+		            <execution>
+		                <id>generate-client</id>
+		                <phase>generate-sources</phase>
+		                <goals>
+		                    <goal>generate</goal>
+		                </goals>
+		                <configuration>
+		                    <inputSpec>src/main/resources/openapi.yaml</inputSpec>
+		                    <!-- URL directe vers l'API en cours d'exécution (optionnel, nécessite que l'API soit active au moment de la génération)
+		                    <inputSpec>http://localhost:8484/v3/api-docs</inputSpec>
+		                    -->
+		                    <generatorName>java</generatorName>
+		                    <generateApiTests>false</generateApiTests>
+		                    <modelPackage>fr.aba.poc.library.generated.client.model</modelPackage>
+		                    <apiPackage>fr.aba.poc.library.generated.client.api</apiPackage>
+		                    <configOptions>
+		                        <library>resttemplate</library>
+		                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
+		                    </configOptions>
+		                    <!-- ✅ AJOUTER CES LIGNES -->
+			                <skipValidateSpec>true</skipValidateSpec>
+			                <skip>false</skip>  <!-- Désactiver temporairement -->
+		                </configuration>
+		            </execution>
+		        </executions>
+		    </plugin>												
 		</plugins>
 	</build>
 

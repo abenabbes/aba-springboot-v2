@@ -1,6 +1,5 @@
 package fr.aba.poc.library.model.entity;
 
-import java.awt.print.Book;
 import java.util.List;
 
 import fr.aba.poc.library.model.Gender;
@@ -15,18 +14,28 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "authors")
+@Table(name = "authors",
+	   uniqueConstraints = {
+        // Un Author ne peut pas avoir le même prénom + nom qu'un autre Author
+		// (contraintes d'unicité sur les colonnes prenom et nom)
+			   @UniqueConstraint(columnNames = {"prenom", "nom"})
+			}
+		)
 // Annotation Lombok
-@Data
+//@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class AuthorEntity {
 
 	@Id
@@ -49,9 +58,18 @@ public class AuthorEntity {
 			fetch = FetchType.LAZY, // LAZY partout par défaut (évite 80% des bugs de perf)
 								 // chargement différé des Books d'un Author
 			                     // (utile si on n'a pas toujours besoin des Books)
-			                     // Par défaut, c'est FetchType.EAGER pour @OneToMany
 			cascade = CascadeType.ALL,
 			orphanRemoval = true // orphanRemoval évite les incohérences : si un Book n'est plus rattaché à un Author, il est supprimé de la BDD
 			)
 	private List<BookEntity> books;
+	
+	public void addBook(BookEntity book) {
+		books.add(book);
+		book.setAuthor(this);
+	}
+	
+	public void removeBook(BookEntity book) {
+		books.remove(book);
+		book.setAuthor(null);
+	}
 }
