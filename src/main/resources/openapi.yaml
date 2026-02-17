@@ -1,0 +1,136 @@
+openapi: 3.1.0
+info:
+  title: Library API
+  description: API de gestion de bibliothèque
+  contact:
+    name: ABA Team
+    email: contact@aba.fr
+  license:
+    name: Apache 2.0
+  version: 1.0.0
+servers:
+- url: http://localhost:8484
+  description: Generated server url
+tags:
+- name: Books
+  description: Gestion des livres
+paths:
+  /api/library/addBooks:
+    post:
+      tags:
+      - Books
+      operationId: addBooks
+      parameters:
+      - name: title
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: isbn
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: datePublication
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: authorPrenom
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: authorNom
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sexe
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BookDto"
+  /api/library/searchOneBook:
+    get:
+      tags:
+      - Books
+      summary: Rechercher un livre
+      operationId: searchOneBook
+      parameters:
+      - name: isbn
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: titre
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: datePublication
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      responses:
+        "200":
+          description: Livre trouvé
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BookDto"
+        "404":
+          description: Livre non trouvé
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BookDto"
+components:
+  schemas:
+    BookDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        titre:
+          type: string
+          minLength: 1
+        isbn:
+          type: string
+          minLength: 1
+        datePublication:
+          type: string
+          format: date
+        authorId:
+          type: integer
+          format: int64
+        authorPrenom:
+          type: string
+          minLength: 1
+        authorNom:
+          type: string
+          minLength: 1
+        authorSexe:
+          type: string
+          enum:
+          - M
+          - MLLE
+          - MME
+      required:
+      - authorNom
+      - authorPrenom
+      - authorSexe
+      - datePublication
+      - isbn
+      - titre
