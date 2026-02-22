@@ -1,5 +1,7 @@
 package fr.aba.poc.library.config;
 
+import fr.aba.poc.library.generated.client.ApiClient;
+import fr.aba.poc.library.generated.client.api.BooksApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,5 +19,15 @@ public class OpenApiConfig {
 				.info(new Info().title("Library API").version("1.0.0").description("API de gestion de bibliothèque")
 						.contact(new Contact().name("ABA Team").email("contact@aba.fr"))
 						.license(new License().name("Apache 2.0").identifier("Apache-2.0"))); // 🔥 AJOUTER ÇA
+	}
+
+	// Bean de configuration de client web
+	@Bean
+	public BooksApi booksApi() {
+
+		ApiClient apiClient = new ApiClient();
+		apiClient.setBasePath("http://localhost:8484");
+
+		return new BooksApi(apiClient);
 	}
 }
