@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.aba.poc.library</groupId>
 	<artifactId>aba-springboot-v2</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>aba-springboot-v2</name>
 	<description>POC project for Spring Boot</description>
 	<url/>
@@ -43,7 +43,7 @@
 		springdoc-openapi
 		  **** integration de  springdoc-openapi-starter-webmvc-ui pour la documentation Swagger UI ****
 		  **** integration de springdoc-openapi-starter-webmvc-api pour la génération de la documentation OpenAPI sans l'interface Swagger UI ***
-					
+		webflux
 	-->
 	<dependencies>
 		<dependency>
@@ -120,7 +120,13 @@
 		    <groupId>org.mapstruct</groupId>
 		    <artifactId>mapstruct-processor</artifactId>
 		    <version>${mapstruct.version}</version>
-		</dependency>	
+		</dependency>
+
+		<!-- Generation d'un client web -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -189,14 +195,19 @@
 		                    <inputSpec>http://localhost:8484/v3/api-docs</inputSpec>
 		                    -->
 		                    <generatorName>java</generatorName>
+							<!-- 🔥 On passe à WebClient -->
+							<library>webclient</library>
 		                    <generateApiTests>false</generateApiTests>
+							<!-- Pas de génération des classes de tests comme model-->
+							<generateModelTests>true</generateModelTests>
 		                    <modelPackage>fr.aba.poc.library.generated.client.model</modelPackage>
 		                    <apiPackage>fr.aba.poc.library.generated.client.api</apiPackage>
 		                    <configOptions>
-		                        <library>resttemplate</library>
+								<useJakartaEe>true</useJakartaEe>
+								<dateLibrary>java8</dateLibrary>
 		                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
 		                    </configOptions>
-		                    <!-- ✅ AJOUTER CES LIGNES -->
+							<addCompileSourceRoot>true</addCompileSourceRoot>
 			                <skipValidateSpec>true</skipValidateSpec>
 			                <skip>false</skip>  <!-- Désactiver temporairement -->
 		                </configuration>
