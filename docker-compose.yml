@@ -13,10 +13,11 @@ services:
     networks:
       - library-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} && psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c 'SELECT 1'"]
       interval: 10s
       timeout: 5s
       retries: 5
+	  start_period: 40s  # Attendre 40s avant de commencer à vérifier
 
   app:
     build:
@@ -24,7 +25,7 @@ services:
       dockerfile: Dockerfile
     container_name: aba-springboot-app
     ports:
-      - "8080:8080"
+      - "8484:8484"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}

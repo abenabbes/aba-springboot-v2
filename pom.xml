@@ -120,13 +120,7 @@
 		    <groupId>org.mapstruct</groupId>
 		    <artifactId>mapstruct-processor</artifactId>
 		    <version>${mapstruct.version}</version>
-<<<<<<< HEAD
 		</dependency>	
-		
-=======
-		</dependency>
-
->>>>>>> 7a75f5eeb8acfc02db18f37ac72527a664baed9f
 		<!-- Generation d'un client web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -212,10 +206,6 @@
 								<dateLibrary>java8</dateLibrary>
 		                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
 		                    </configOptions>
-<<<<<<< HEAD
-		                     <!-- Ajoute le code généré dans le classpath du projet -->
-=======
->>>>>>> 7a75f5eeb8acfc02db18f37ac72527a664baed9f
 							<addCompileSourceRoot>true</addCompileSourceRoot>
 			                <skipValidateSpec>true</skipValidateSpec>
 			                <skip>false</skip>  <!-- Désactiver temporairement -->
