@@ -16,6 +16,6 @@ public class OpenApiConfig {
 		return new OpenAPI()
 				.info(new Info().title("Library API").version("1.0.0").description("API de gestion de bibliothèque")
 						.contact(new Contact().name("ABA Team").email("contact@aba.fr"))
-						.license(new License().name("Apache 2.0")));
+						.license(new License().name("Apache 2.0").identifier("Apache-2.0"))); // 🔥 AJOUTER ÇA
 	}
 }
